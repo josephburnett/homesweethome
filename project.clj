@@ -8,4 +8,5 @@
                  [compojure "1.1.3"]
                  [ring/ring-jetty-adapter "1.1.0"]
                  [cheshire "5.2.0"]
-                 [me.raynes/fs "1.4.5"]])
+                 [me.raynes/fs "1.4.5"]
+                 [clojure-watch "0.1.9"]])
