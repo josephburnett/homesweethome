@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+#  Convert a PDF to an image and then run Tessract OCR.
+#  Prerequisites: tesseract and convert (ImageMagick)
+#
+
+TEMPFILE=$RANDOM
+
+convert -depth 8 -density 300 -units PixelsPerInch $1 /tmp/$TEMPFILE.tiff
+tesseract /tmp/$TEMPFILE.tiff /tmp/$TEMPFILE
+cat /tmp/$TEMPFILE.txt
+
+rm /tmp/$TEMPFILE.tiff /tmp/$TEMPFILE.txt
