@@ -9,4 +9,3 @@
     (if (= 0 (:exit pdftext))
       (:out pdftext)
       (throw (Exception. (str "Non zero readpdf exit code: " (:exit pdftext)))))))
- 
