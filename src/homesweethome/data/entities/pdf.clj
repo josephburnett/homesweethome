@@ -1,5 +1,6 @@
 (ns homesweethome.data.entities.pdf
-  (:require [me.raynes.fs :refer [exec]]))
+  (:require [me.raynes.fs :refer [exec]]
+            [homesweethome.data.entity :refer [search]]))
 
 (defn intake [filename]
   (println "Intaking PDF: " filename))
@@ -9,3 +10,8 @@
     (if (= 0 (:exit pdftext))
       (:out pdftext)
       (throw (Exception. (str "Non zero readpdf exit code: " (:exit pdftext)))))))
+
+(defn view [id]
+  (search #(if (and (= "pdf" (get % "type"))
+                    (= id (get % "id")))
+             true false)))

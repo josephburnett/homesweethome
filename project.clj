@@ -9,4 +9,5 @@
                  [ring/ring-jetty-adapter "1.1.0"]
                  [cheshire "5.2.0"]
                  [me.raynes/fs "1.4.5"]
-                 [clojure-watch "0.1.9"]])
+                 [clojure-watch "0.1.9"]
+                 [hiccup "1.0.4"]])
