@@ -10,4 +10,5 @@
                  [cheshire "5.2.0"]
                  [me.raynes/fs "1.4.5"]
                  [clojure-watch "0.1.9"]
-                 [hiccup "1.0.4"]])
+                 [hiccup "1.0.4"]]
+  :main homesweethome.main)

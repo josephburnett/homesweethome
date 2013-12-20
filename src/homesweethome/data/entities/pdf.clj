@@ -11,7 +11,7 @@
       (:out pdftext)
       (throw (Exception. (str "Non zero readpdf exit code: " (:exit pdftext)))))))
 
-(defn view [id]
+(defn load [id]
   (search #(if (and (= "pdf" (get % "type"))
                     (= id (get % "id")))
              true false)))
