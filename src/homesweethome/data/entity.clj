@@ -13,5 +13,7 @@
                     (catch Exception e nil))
                  files))))
 
-(defn search [f]
-  (filter f (scan)))
+(defn search [type f]
+  (filter #(and (= type (get % "type"))
+                (f %))
+          (scan)))
