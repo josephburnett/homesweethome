@@ -5,7 +5,7 @@
 
 (defn scan []
   (let [entities (get config "entities")
-        entity-paths (map #(get % "path") entities)
+        entity-paths (map #(get (second %) "path") (seq entities))
         files (flatten (map #(find-files (expand-home %) #".*\.hsh$") entity-paths))]
     (filter (complement nil?)
             (map #(try
