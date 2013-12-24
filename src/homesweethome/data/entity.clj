@@ -4,8 +4,8 @@
             [me.raynes.fs :refer [find-files expand-home]]))
 
 (defn scan []
-  (let [entities (get config "entities")
-        entity-paths (map #(get (second %) "path") (seq entities))
+  (let [entities (:entities config)
+        entity-paths (map #(:path (second %)) (seq entities))
         files (flatten (map #(find-files (expand-home %) #".*\.hsh$") entity-paths))]
     (filter (complement nil?)
             (map #(try
@@ -14,6 +14,6 @@
                  files))))
 
 (defn search [type f]
-  (filter #(and (= type (get % "type"))
+  (filter #(and (= type (:type %))
                 (f %))
           (scan)))

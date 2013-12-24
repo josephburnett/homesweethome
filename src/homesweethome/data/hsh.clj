@@ -3,16 +3,10 @@
 
 (def hsh-prefix "homesweethome-1.0\n")
 
-(defn read-json [s]
-  (parse-string s))
-
-(defn write-json [d]
-  (generate-string d))
-
 (defn read-hsh [f]
   (let [contents (slurp f)]
     (if (.startsWith contents hsh-prefix)
-      (read-json (.substring contents (.length hsh-prefix)))
+      (parse-string (.substring contents (.length hsh-prefix)) true)
       (throw (Exception. "Not a homesweethome file")))))
 
 (defn write-hsh [f d]

@@ -4,7 +4,7 @@
 
 (defn- read-config []
   (let [config (read-hsh (expand-home "~/.homesweethome.hsh"))]
-    (if (.equals "config" (get config "type"))
+    (if (.equals "config" (:type config))
       config
       (throw (Exception. "Not a config")))))
 

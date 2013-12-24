@@ -9,13 +9,13 @@
           :callback (fn [event filename] (intake filename))}})
 
 (defn configure-watches []
-  (map #(let [type (get % "type")
+  (map #(let [type (:type %)
               intake-watch (get intake-watches type)]
           (if (nil? intake-watch)
             (throw (Exception. (str "Invalid watch type: " type)))
             (assoc intake-watch
-                   :path (.getAbsolutePath (expand-home (get % "path"))))))
-       (get config "intake-watches")))
+                   :path (.getAbsolutePath (expand-home (:path %))))))
+       (:intake-watches config)))
 
 (defn init []
   (let [watches (configure-watches)]
