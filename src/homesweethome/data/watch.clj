@@ -5,20 +5,19 @@
             [me.raynes.fs :refer [expand-home]]))
 
 (def intake-watches
-  {"pdf" {:event-types [:create]
-          :callback (fn [event filename] (intake filename))}})
+  {:pdf {:event-types [:create]
+         :callback (fn [event filename] (intake filename))}})
 
 (defn configure-watches []
-  (map #(let [type (:type %)
+  (map #(let [type (first %)
               intake-watch (get intake-watches type)]
           (if (nil? intake-watch)
             (throw (Exception. (str "Invalid watch type: " type)))
             (assoc intake-watch
-                   :path (.getAbsolutePath (expand-home (:path %))))))
-       (:intake-watches config)))
+                   :path (.getAbsolutePath (expand-home (:path (second %)))))))
+       (seq (:entities config))))
 
 (defn init []
   (let [watches (configure-watches)]
     (println "Starting watches: " watches)
     (start-watch watches)))
- 

@@ -1,5 +1,7 @@
 (ns homesweethome.data.hsh
-  (:require [cheshire.core :refer [parse-string generate-string]]))
+  (:require [cheshire.core :refer [parse-string generate-string]]
+            [clojure.java.io :refer [as-file]]
+            [me.raynes.fs :refer [exists? create expand-home]]))
 
 (def hsh-prefix "homesweethome-1.0\n")
 
@@ -10,5 +12,8 @@
       (throw (Exception. "Not a homesweethome file")))))
 
 (defn write-hsh [f d]
-  (let [contents (generate-string d)]
-    (spit f (str hsh-prefix contents))))
+  (let [file (as-file f)
+        contents (generate-string d)]
+    (println f)
+    (if (not (exists? file)) (create file))
+    (spit file (str hsh-prefix contents))))
