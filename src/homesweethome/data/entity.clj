@@ -14,9 +14,10 @@
                  files))))
 
 (defn search [type f]
-  (filter #(and (= type (:type %))
-                (f %))
-          (scan type)))
+  (let [type-string (.substring (str type) 1)]
+    (filter #(and (= type-string (:type %))
+                  (f %))
+            (scan type))))
 
 (defn entity-init []
   (doall

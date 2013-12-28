@@ -30,8 +30,11 @@
                  {:type "pdf"
                   :text text
                   :md5 (md5 (as-file filename))
-                  :file key
+                  :key key
                   :tags []}))))
 
-(defn load [id]
-  (search "pdf" #(= id (:id %))))
+(defn load-by-key [key]
+  (search :pdf #(= key (:key %))))
+
+(defn load-by-md5 [md5]
+  (search :pdf #(= md5 (:md5 %))))

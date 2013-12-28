@@ -6,10 +6,10 @@
             [compojure.core :refer [defroutes ANY]]
             [hiccup.page :refer [html5]]))
 
-(defresource view-pdf [id]
+(defresource view-pdf [key]
   :allowed-methods [:get]
   :available-media-types ["text/html"]
-  :handle-ok (fn [_] (html5 (map #(pdf-view/render %) (pdf-entity/load id)))))
+  :handle-ok (fn [_] (html5 (map #(pdf-view/render %) (pdf-entity/load-by-key key)))))
 
 (defroutes app
-  (ANY "/pdf/view/:id" [id] (view-pdf id)))
+  (ANY "/pdf/view/:key" [key] (view-pdf key)))
