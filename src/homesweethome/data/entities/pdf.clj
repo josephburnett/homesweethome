@@ -1,13 +1,12 @@
 (ns homesweethome.data.entities.pdf
-  (:require [me.raynes.fs :refer [exec expand-home]]
+  (:require [me.raynes.fs :refer [absolute-path split exec expand-home]]
             [homesweethome.data.entity :refer [search]]
             [homesweethome.data.hsh :refer [write-hsh]]
-            [homesweethome.config :refer [config]]
+            [homesweethome.config :refer [entity-path]]
             [digest :refer [md5]]
-            [clojure.java.io :refer [as-file]]))
-
-(defn hsh-id [filename]
-  (md5 (as-file filename)))
+            [clojure.java.io :refer [as-file]]
+            [clojure.string :refer [join]])
+  (:import [java.io File]))
 
 (defn readpdf [filename]
   "sample text")
@@ -18,14 +17,21 @@
 
 (defn intake [filename]
   (if (.endsWith filename ".pdf")
+    ; TODO use extension function
     (let [text (readpdf filename)
-          name (str (expand-home (get-in config [:entities :pdf :path])) 
-                    "/" 
-                    (hsh-id filename))]
-      (write-hsh name {:type "pdf"
-                       :text text
-                       :file filename
-                       :tags []}))))
+          key (join File/separator 
+                    (drop (count (split (entity-path :pdf)))
+                          (split (absolute-path filename))))
+          hsh-filename (join File/separator
+                             [(entity-path :pdf)
+                                   ".homesweethome"
+                                   (str key ".hsh")])]
+      (write-hsh hsh-filename 
+                 {:type "pdf"
+                  :text text
+                  :md5 (md5 (as-file filename))
+                  :file key
+                  :tags []}))))
 
 (defn load [id]
   (search "pdf" #(= id (:id %))))

@@ -1,6 +1,6 @@
 (ns homesweethome.config
   (:require [homesweethome.data.hsh :refer [read-hsh write-hsh]]
-            [me.raynes.fs :refer [expand-home]]))
+            [me.raynes.fs :refer [file expand-home with-cwd]]))
 
 (defn- read-config []
   (let [config (read-hsh (expand-home "~/.homesweethome.hsh"))]
@@ -9,3 +9,13 @@
       (throw (Exception. "Not a config")))))
 
 (def config (read-config))
+
+(defn cwd-file [path]
+  (let [cwd (get-in config [:cwd])]
+    (with-cwd cwd
+      (file path))))
+
+(defn entity-path [type]
+ (let [ep (get-in config [:entities type :path])
+       f (cwd-file ep)]
+   (.getAbsolutePath f)))

@@ -1,12 +1,12 @@
 (ns homesweethome.data.entity
-  (:require [homesweethome.config :refer [config]]
+  (:require [homesweethome.config :refer [config entity-path]]
             [homesweethome.data.hsh :refer [read-hsh]]
-            [me.raynes.fs :refer [find-files expand-home]]))
+            [me.raynes.fs :refer [find-files split mkdirs exists?]]
+            [clojure.string :refer [join]])
+  (:import [java.io File]))
 
-(defn scan []
-  (let [entities (:entities config)
-        entity-paths (map #(:path (second %)) (seq entities))
-        files (flatten (map #(find-files (expand-home %) #".*\.hsh$") entity-paths))]
+(defn scan [type]
+  (let [files (find-files (entity-path type) #".*\.hsh$")]
     (filter (complement nil?)
             (map #(try
                     (read-hsh (.getAbsolutePath %))
@@ -16,4 +16,12 @@
 (defn search [type f]
   (filter #(and (= type (:type %))
                 (f %))
-          (scan)))
+          (scan type)))
+
+(defn entity-init []
+  (doall
+    (map #(let [path (join File/separator 
+                           (concat (split (entity-path (first %))) '(".homesweethome")))]
+            (if (not (exists? path))
+              (mkdirs path)))
+         (seq (get-in config [:entities])))))
