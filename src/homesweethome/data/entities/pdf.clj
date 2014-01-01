@@ -38,3 +38,6 @@
 
 (defn load-by-md5 [md5]
   (search :pdf #(= md5 (:md5 %))))
+
+(defn load-by-key-prefix [key-prefix]
+  (search :pdf #(.startsWith (:key %) key-prefix)))

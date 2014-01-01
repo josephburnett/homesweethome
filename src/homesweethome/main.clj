@@ -5,6 +5,10 @@
             [ring.adapter.jetty :refer [run-jetty]]))
 
 (defn -main [& args]
-  (entity-init)
-  (watch-init)
-  (run-jetty #'app {:port 4663}))
+  (let [operation (first args)]
+    (case operation
+      "watch" (do
+                (entity-init)
+                (watch-init))
+      "serve" (run-jetty #'app {:port 4663})
+      (throw (Exception. "Usage: homesweethome [ watch | serve ]")))))
