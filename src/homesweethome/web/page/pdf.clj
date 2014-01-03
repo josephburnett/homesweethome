@@ -1,5 +1,6 @@
 (ns homesweethome.web.page.pdf
   (:require [homesweethome.config :refer [entity-path]]
+            [homesweethome.data.category :refer [categories]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5]]
             [me.raynes.fs :refer [absolute-path expand-home]]))
@@ -10,8 +11,14 @@
 (defn clean-text [text]
   (apply str (take text-preview-length (re-seq #"[\d\w\s\.\-]" text))))
 
+(defn menu []
+  (html
+    [:div {:id "pdf-menu" :class "menu"}
+     [:ul (map #(html [:li %]) (categories :pdf))]]))
+
 (defn render [pdfs]
   (html5
+    (menu)
     (map #(html
             [:div {:id (:key %) :class "pdf"}
              [:span {:class "pdf-key"} (:key %)]
@@ -20,6 +27,7 @@
      
 (defn render-preview [pdfs]
   (html5
+    (menu)
     (map #(html
            [:div {:id (:key %) :class "pdf-li"}
             [:span {:class "pdf-preview-key"} (:key %)]
