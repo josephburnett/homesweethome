@@ -11,7 +11,8 @@
   :allowed-methods [:get]
   :available-media-types ["text/html"]
   :handle-ok 
-  (fn [ctx] (let [key (get-in ctx [:request :params :key])]
+  (fn [ctx] (let [key (get-in ctx [:request :params "key"])]
+              (println "key:" key)
               (html5 (map #(pdf-view/render %) 
                           (pdf-entity/load-by-key key))))))
 
@@ -19,7 +20,8 @@
   :allowed-methods [:get]
   :available-media-types ["text/html"]
   :handle-ok 
-  (fn [ctx] (let [key-prefix (get-in ctx [:request :params :key-prefix])]
+  (fn [ctx] (let [key-prefix (get-in ctx [:request :params "key-prefix"])]
+              (println "key-prefix:" key-prefix)
               (html5 (pdf-view/render-ul 
                        (pdf-entity/load-by-key-prefix key-prefix))))))
 
