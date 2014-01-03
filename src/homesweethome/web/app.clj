@@ -11,7 +11,7 @@
   :available-media-types ["text/html"]
   :handle-ok 
   (fn [ctx] (let [key (get-in ctx [:request :params "key"])]
-              (pdf-view/render
+              (pdf-view/render ctx
                 (pdf-entity/load-by-key key)))))
 
 (defresource browse-pdf
@@ -19,7 +19,7 @@
   :available-media-types ["text/html"]
   :handle-ok 
   (fn [ctx] (let [key-prefix (get-in ctx [:request :params "key-prefix"])]
-              (pdf-view/render-preview
+              (pdf-view/render-preview ctx
                 (pdf-entity/load-by-key-prefix key-prefix)))))
 
 (defroutes app
