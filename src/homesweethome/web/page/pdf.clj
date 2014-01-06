@@ -1,6 +1,6 @@
 (ns homesweethome.web.page.pdf
   (:require [homesweethome.config :refer [entity-path]]
-            [homesweethome.data.category :refer [categories]]
+            [homesweethome.data.entity :refer [categories]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5]]
             [hiccup.form :refer [drop-down with-group submit-button form-to]]
