@@ -22,6 +22,18 @@
               (pdf-view/render-preview ctx
                 (pdf-entity/load-by-key-prefix key-prefix)))))
 
+(defresource categorize-pdf
+  :allowed-methods [:get] ; change this to post
+  :available-media-types ["text/html"]
+  :handle-ok
+  (fn [ctx] (let [key (get-in ctx [:request :params "key"])
+                  category (get-in ctx [:request :params "key-prefix"])]
+              (pdf-view/render-preview ctx
+                (do
+                  (pdf-entity/categorize key category)
+                  (pdf-entity/load-by-key-prefix category))))))
+
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))
-  (ANY "/pdf/browse" [] (wrap-params browse-pdf)))
+  (ANY "/pdf/browse" [] (wrap-params browse-pdf))
+  (ANY "/pdf/categorize" [] (wrap-params categorize-pdf)))

@@ -1,6 +1,6 @@
 (ns homesweethome.data.entities.pdf
   (:require [me.raynes.fs :refer [absolute-path split exec expand-home]]
-            [homesweethome.data.entity :refer [search]]
+            [homesweethome.data.entity :as entity]
             [homesweethome.data.hsh :refer [write-hsh]]
             [homesweethome.config :refer [entity-path]]
             [digest :refer [md5]]
@@ -34,10 +34,13 @@
                   :tags []}))))
 
 (defn load-by-key [key]
-  (search :pdf #(= key (:key %))))
+  (entity/search :pdf #(= key (:key %))))
 
 (defn load-by-md5 [md5]
-  (search :pdf #(= md5 (:md5 %))))
+  (entity/search :pdf #(= md5 (:md5 %))))
 
 (defn load-by-key-prefix [key-prefix]
-  (search :pdf #(.startsWith (:key %) key-prefix)))
+  (entity/search :pdf #(.startsWith (:key %) key-prefix)))
+
+(defn categorize [key category]
+  (entity/categorize key :pdf category))
