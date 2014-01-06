@@ -8,9 +8,9 @@
 (defn categories [type]
   (let [path (entity-path type)]
     ;; use fs to list directories
-    (sort (map #(.substring % (+ 1 (count hsh-folder)))
-               (filter #(and (.startsWith % hsh-folder)
-                             (not (= % hsh-folder)))
+    (sort (map #(.substring % 1)
+               (filter #(and (not (.startsWith % hsh-folder))
+                             (not (.isEmpty %)))
                        (map (comp
                               #(.substring % (count path))
                               #(.getAbsolutePath %) 
