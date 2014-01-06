@@ -1,8 +1,10 @@
 (ns homesweethome.data.entity
   (:require [homesweethome.config :refer [config entity-path]]
-            [homesweethome.data.hsh :refer [read-hsh]]
-            [me.raynes.fs :refer [base-name exists? directory? iterate-dir find-files split mkdirs]]
-            [clojure.string :refer [join]])
+            [homesweethome.data.hsh :refer [read-hsh write-hsh]]
+            [me.raynes.fs :refer [file base-name exists? directory? iterate-dir 
+                                  find-files split mkdirs copy+]]
+            [clojure.string :refer [join]]
+            [clojure.java.io :refer [delete-file]])
   (:import [java.io File]))
 
 (def hsh-folder "/.homesweethome")
@@ -31,7 +33,6 @@
 
 (defn categories [type]
   (let [path (entity-path type)]
-    ;; use fs to list directories
     (sort (map #(.substring % 1)
                (filter #(and (not (.startsWith % hsh-folder))
                              (not (.isEmpty %)))
@@ -47,11 +48,18 @@
         from (str ep sep key)
         from-hsh (str ep sep ".homesweethome" sep key ".hsh")
         to (str ep sep category sep (base-name key))
-        to-hsh (str ep sep ".homesweethome" sep category sep (base-name key) ".hsh")]
-    (if (and (exists? from)
-             (exists? from-hsh)
-             (not (exists? to))
-             (not (exists? to-hsh))
-             (some #(= category %) (categories type)))
-      (println "I'm going to move" from "to" to "and" from-hsh "to" to-hsh)
-      (println "Cannot move" from "to" to "and" from-hsh "to" to-hsh))))
+        to-hsh (str ep sep ".homesweethome" sep category sep (base-name key) ".hsh")
+        new-key (.substring to (+ 1 (count ep)))]
+    (if (not (and (exists? from)
+                  (exists? from-hsh)
+                  (not (exists? to))
+                  (not (exists? to-hsh))
+                  (some #(= category %) (categories type))))
+      (throw (Exception. (str "Cannot move " from " to " to " and " from-hsh " to " to-hsh)))
+      (do
+        (copy+ from to)
+        (copy+ from-hsh to-hsh)
+        (write-hsh to-hsh (assoc (read-hsh to-hsh) :key new-key))
+        (delete-file (file from))
+        (delete-file (file from-hsh))))))
+      
