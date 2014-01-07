@@ -2,6 +2,7 @@
   (:require [homesweethome.config :refer [config]]
             [homesweethome.data.entities.pdf :as pdf-entity]
             [homesweethome.web.page.pdf :as pdf-view]
+            [homesweethome.data.entity :refer [key-category]]
             [liberator.core :refer [resource defresource]]
             [ring.middleware.params :refer [wrap-params]]
             [compojure.core :refer [defroutes ANY]]))
@@ -31,7 +32,7 @@
               (pdf-view/render-preview ctx
                 (do
                   (pdf-entity/categorize key category)
-                  (pdf-entity/load-by-key-prefix category))))))
+                  (pdf-entity/load-by-key-prefix (key-category key)))))))
 
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))

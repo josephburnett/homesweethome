@@ -3,7 +3,7 @@
             [homesweethome.data.hsh :refer [read-hsh write-hsh]]
             [me.raynes.fs :refer [file base-name exists? directory? iterate-dir 
                                   find-files split mkdirs copy+]]
-            [clojure.string :refer [join]]
+            [clojure.string :as string]
             [clojure.java.io :refer [delete-file]])
   (:import [java.io File]))
 
@@ -25,11 +25,14 @@
 
 (defn entity-init []
   (doall
-    (map #(let [path (join File/separator 
+    (map #(let [path (string/join File/separator 
                            (concat (split (entity-path (first %))) '(".homesweethome")))]
             (if (not (exists? path))
               (mkdirs path)))
          (seq (get-in config [:entities])))))
+
+(defn key-category [key]
+  (string/join "/" (drop-last (string/split key #"\/"))))
 
 (defn categories [type]
   (let [path (entity-path type)]
@@ -54,6 +57,7 @@
                   (exists? from-hsh)
                   (not (exists? to))
                   (not (exists? to-hsh))
+                  (not (= to from))
                   (some #(= category %) (categories type))))
       (throw (Exception. (str "Cannot move " from " to " to " and " from-hsh " to " to-hsh)))
       (do

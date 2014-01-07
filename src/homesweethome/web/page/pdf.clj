@@ -1,6 +1,6 @@
 (ns homesweethome.web.page.pdf
   (:require [homesweethome.config :refer [entity-path]]
-            [homesweethome.data.entity :refer [categories]]
+            [homesweethome.data.entity :refer [categories key-category]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5]]
             [hiccup.form :refer [drop-down with-group submit-button form-to hidden-field]]
@@ -24,15 +24,12 @@
     (html
       (category-selector default-category))))
 
-(defn prefix [key]
-  (join "/" (drop-last (split key #"\/"))))
-
 (defn pdf-link [pdf]
   (str "/pdf/view?key=" (:key pdf)
-       "&key-prefix=" (prefix (:key pdf))))
+       "&key-prefix=" (key-category (:key pdf))))
 
 (defn categorize-link [pdf]
-  (let [curr-cat (prefix (:key pdf))]
+  (let [curr-cat (key-category (:key pdf))]
     (form-to [:get "/pdf/categorize"]
       (drop-down "key-prefix" (filter #(not (= curr-cat %)) (categories :pdf)))
       (hidden-field "key" (:key pdf))
