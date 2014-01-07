@@ -2,7 +2,7 @@
   (:require [homesweethome.config :refer [entity-path]]
             [homesweethome.data.entity :refer [categories key-category]]
             [hiccup.core :refer [html]]
-            [hiccup.page :refer [html5]]
+            [hiccup.page :refer [html5 include-css]]
             [hiccup.form :refer [drop-down with-group submit-button form-to hidden-field]]
             [hiccup.element :refer [link-to]]
             [me.raynes.fs :refer [absolute-path expand-home]]
@@ -37,24 +37,27 @@
 
 (defn render [ctx pdfs]
   (html5
+    (include-css "/css/pdf.css")
     (menu ctx)
     (map #(html
-            (link-to 
-              (pdf-link %)
-              [:div {:id (:key %) :class "pdf"}
-               [:span {:class "pdf-key"} (:key %)]
-               [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]
-               (categorize-link %)]))
+            [:div {:id (:key %) :class "pdf"}
+             [:span {:class "pdf-key"} (:key %)]
+             [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]
+             [:span {:class "pdf-categorize-link"}
+              (categorize-link %)]])
          pdfs)))
      
 (defn render-preview [ctx pdfs]
   (html5
+    (include-css "/css/pdf.css")
     (menu ctx)
     (map #(html
-            (link-to
-              (pdf-link %)
-              [:div {:id (:key %) :class "pdf-li"}
-               [:span {:class "pdf-preview-key"} (:key %)]
-               [:span {:class "pdf-preview-text"} (clean-text (:text %))]
-               (categorize-link %)]))
+            [:div {:id (:key %) :class "pdf-preview"}
+             [:span {:class "pdf-view-link"}
+              (link-to
+                (pdf-link %)
+                [:span {:class "pdf-preview-key"} (:key %)]
+                [:span {:class "pdf-preview-text"} (clean-text (:text %))])]
+              [:span {:class "pdf-categorize-link"}
+               (categorize-link %)]])
          pdfs)))

@@ -5,7 +5,8 @@
             [homesweethome.data.entity :refer [key-category]]
             [liberator.core :refer [resource defresource]]
             [ring.middleware.params :refer [wrap-params]]
-            [compojure.core :refer [defroutes ANY]]))
+            [compojure.core :refer [defroutes ANY]]
+            [compojure.route :refer [resources]]))
 
 (defresource view-pdf
   :allowed-methods [:get]
@@ -37,4 +38,5 @@
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))
   (ANY "/pdf/browse" [] (wrap-params browse-pdf))
-  (ANY "/pdf/categorize" [] (wrap-params categorize-pdf)))
+  (ANY "/pdf/categorize" [] (wrap-params categorize-pdf))
+  (resources "/"))
