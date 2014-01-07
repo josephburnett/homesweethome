@@ -30,7 +30,7 @@
 
 (defn categorize-link [pdf]
   (let [curr-cat (key-category (:key pdf))]
-    (form-to [:get "/pdf/categorize"]
+    (form-to [:post "/pdf/categorize"]
       (drop-down "key-prefix" (filter #(not (= curr-cat %)) (categories :pdf)))
       (hidden-field "key" (:key pdf))
       (submit-button "categorize"))))

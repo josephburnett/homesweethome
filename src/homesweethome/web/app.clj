@@ -25,9 +25,9 @@
                 (pdf-entity/load-by-key-prefix key-prefix)))))
 
 (defresource categorize-pdf
-  :allowed-methods [:get] ; change this to post
+  :allowed-methods [:post]
   :available-media-types ["text/html"]
-  :handle-ok
+  :handle-created
   (fn [ctx] (let [key (get-in ctx [:request :params "key"])
                   category (get-in ctx [:request :params "key-prefix"])]
               (pdf-view/render-preview ctx
