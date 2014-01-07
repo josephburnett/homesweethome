@@ -7,8 +7,8 @@
 (defn -main [& args]
   (let [operation (first args)]
     (case operation
-      "watch" (do
-                (entity-init)
-                (watch-init))
-      "serve" (run-jetty #'app {:port 4663})
-      (throw (Exception. "Usage: homesweethome [ watch | serve ]")))))
+      "intake" (do
+                 (entity-init)
+                 (watch-init))
+      "website" (run-jetty #'app {:port 4663})
+      (throw (Exception. "Usage: homesweethome [ intake | website ]")))))
