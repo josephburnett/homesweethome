@@ -3,7 +3,7 @@
             [homesweethome.data.entity :refer [categories]]
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5]]
-            [hiccup.form :refer [drop-down with-group submit-button form-to]]
+            [hiccup.form :refer [drop-down with-group submit-button form-to hidden-field]]
             [hiccup.element :refer [link-to]]
             [me.raynes.fs :refer [absolute-path expand-home]]
             [clojure.string :refer [split join]]))
@@ -31,6 +31,13 @@
   (str "/pdf/view?key=" (:key pdf)
        "&key-prefix=" (prefix (:key pdf))))
 
+(defn categorize-link [pdf]
+  (let [curr-cat (prefix (:key pdf))]
+    (form-to [:get "/pdf/categorize"]
+      (drop-down "key-prefix" (filter #(not (= curr-cat %)) (categories :pdf)))
+      (hidden-field "key" (:key pdf))
+      (submit-button "categorize"))))
+
 (defn render [ctx pdfs]
   (html5
     (menu ctx)
@@ -39,7 +46,8 @@
               (pdf-link %)
               [:div {:id (:key %) :class "pdf"}
                [:span {:class "pdf-key"} (:key %)]
-               [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]]))
+               [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]
+               (categorize-link %)]))
          pdfs)))
      
 (defn render-preview [ctx pdfs]
@@ -50,5 +58,6 @@
               (pdf-link %)
               [:div {:id (:key %) :class "pdf-li"}
                [:span {:class "pdf-preview-key"} (:key %)]
-               [:span {:class "pdf-preview-text"} (clean-text (:text %))]]))
+               [:span {:class "pdf-preview-text"} (clean-text (:text %))]
+               (categorize-link %)]))
          pdfs)))
