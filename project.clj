@@ -11,5 +11,7 @@
                  [me.raynes/fs "1.4.5"]
                  [clojure-watch "0.1.9"]
                  [hiccup "1.0.4"]
-                 [digest "1.4.3"]]
+                 [digest "1.4.3"]
+                 [com.mortennobel/java-image-scaling "0.8.5"]
+                 [org.apache.pdfbox/pdfbox "1.8.3"]]
   :main homesweethome.main)
