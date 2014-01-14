@@ -3,8 +3,8 @@
   (:import [java.io File]
            [java.lang Math]
            [javax.imageio ImageIO]
-           [java.awt.image BufferedImage]
-           [java.awt.image WritableRaster]
+           [java.awt.image BufferedImage WritableRaster]
+           [java.awt Graphics2D Color]
            [com.mortennobel.imagescaling ResampleOp]
            [org.apache.pdfbox.pdmodel PDDocument]))
 
@@ -16,19 +16,36 @@
     (if (empty? coll) '()
       (cons index (y-offsets (rest coll) (+ index (.getHeight (first coll))))))))
 
+(defn x-offsets
+  ([coll]
+    (let [max-width (apply max (map #(.getWidth %) coll))]
+      (map #(/ (- max-width (.getWidth %)) 2)
+           coll))))
+
 (defn pdf-to-images [filename]
   (with-open [document (PDDocument/load (as-file filename))]
     (doall
       (map #(.convertToImage %)
            (.getAllPages (.getDocumentCatalog document))))))
 
+(defn fill! [image]
+  (let [graphics (.createGraphics image)]
+    (do
+      (.setPaint graphics (Color. 255 255 255))
+      (.fillRect graphics 0 0 (.getWidth image) (.getHeight image)))
+    image))
+
+(defn blank-image [width height]
+  (fill! (BufferedImage. width height 1)))
+
 (defn stack [images]
   (let [width (apply max (map #(.getWidth %) images))
         height (reduce + (map #(.getHeight %) images))
-        image (BufferedImage. width height 1)]
+        image (blank-image width height)]
     (doall
-      (map #(insert! %1 image 0 %2)
+      (map #(insert! %1 image %2 %3)
            images
+           (x-offsets images)
            (y-offsets images)))
     image))
 
