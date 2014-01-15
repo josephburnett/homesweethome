@@ -69,6 +69,9 @@
 	y (int (* h r))]
     (rescale x y b)))
 
+(defn thumbnail [^BufferedImage b]
+  (rescale-fixed-ratio 200 b))
+
 (defn sub-image [[x y dx dy] ^BufferedImage b]
   "Crop image b to dimensions [x y dx dy]."
   (.getSubimage b x y dx dy))
