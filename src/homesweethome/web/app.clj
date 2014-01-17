@@ -7,7 +7,8 @@
             [ring.middleware.params :refer [wrap-params]]
             [compojure.core :refer [defroutes ANY]]
             [compojure.route :refer [resources]]
-            [homesweethome.image.cache :as i-cache]))
+            [homesweethome.image.cache :as i-cache])
+  (:import [java.io ByteArrayInputStream]))
 
 (defresource view-pdf
   :allowed-methods [:get]
@@ -43,8 +44,8 @@
   (fn [ctx] (let [key (get-in ctx [:request :params "key"])
                   pdf (pdf-entity/load-by-key key)
                   _ (assert (not (nil? pdf)))
-                  image (i-cache/thumbnail pdf)]
-              (-> image .getData .getDataBuffer .getData))))
+                  file (i-cache/thumbnail pdf)]
+              file)))
 
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))
