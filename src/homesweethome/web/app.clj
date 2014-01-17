@@ -1,12 +1,13 @@
 (ns homesweethome.web.app
-  (:require [homesweethome.config :refer [config]]
+  (:require [homesweethome.config :refer [config cache-path]]
             [homesweethome.data.entities.pdf :as pdf-entity]
             [homesweethome.web.page.pdf :as pdf-view]
             [homesweethome.data.entity :refer [key-category]]
             [liberator.core :refer [resource defresource]]
             [ring.middleware.params :refer [wrap-params]]
             [compojure.core :refer [defroutes ANY]]
-            [compojure.route :refer [resources]]))
+            [compojure.route :refer [resources]]
+            [homesweethome.image.cache :as i-cache]))
 
 (defresource view-pdf
   :allowed-methods [:get]
@@ -35,8 +36,19 @@
                   (pdf-entity/categorize key category)
                   (pdf-entity/load-by-key-prefix (key-category key)))))))
 
+(defresource thumbnail-pdf
+  :allowed-methods [:get]
+  :available-media-types ["image/jpeg"]
+  :handle-ok
+  (fn [ctx] (let [key (get-in ctx [:request :params "key"])
+                  pdf (pdf-entity/load-by-key key)
+                  _ (assert (not (nil? pdf)))
+                  image (i-cache/thumbnail pdf)]
+              (-> image .getData .getDataBuffer .getData))))
+
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))
   (ANY "/pdf/browse" [] (wrap-params browse-pdf))
   (ANY "/pdf/categorize" [] (wrap-params categorize-pdf))
+  (ANY "/pdf/thumbnail" [] (wrap-params thumbnail-pdf))
   (resources "/"))

@@ -19,3 +19,8 @@
  (let [ep (get-in config [:entities type :path])
        f (cwd-file ep)]
    (.getAbsolutePath f)))
+
+(defn cache-path []
+  (let [cache (get-in config [:cache])
+        f (cwd-file cache)]
+    (.getAbsolutePath f)))

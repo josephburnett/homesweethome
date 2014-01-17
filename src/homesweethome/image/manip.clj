@@ -23,6 +23,7 @@
            coll))))
 
 (defn pdf-to-images [filename]
+  (println "loading pdf " filename)
   (with-open [document (PDDocument/load (as-file filename))]
     (doall
       (map #(.convertToImage %)
@@ -37,17 +38,6 @@
 
 (defn blank-image [width height]
   (fill! (BufferedImage. width height 1)))
-
-(defn stack [images]
-  (let [width (apply max (map #(.getWidth %) images))
-        height (reduce + (map #(.getHeight %) images))
-        image (blank-image width height)]
-    (doall
-      (map #(insert! %1 image %2 %3)
-           images
-           (x-offsets images)
-           (y-offsets images)))
-    image))
 
 (defn load-image [^String f]
   "Load filename f into a BufferedImage"
@@ -107,3 +97,14 @@
 	   z (range 0 (.getNumBands da))]
        (.setSample db (int (+ dx x)) (int (+ dy y)) (int z)
 		   (.getSample da x y z))))))
+
+(defn stack [images]
+  (let [width (apply max (map #(.getWidth %) images))
+        height (reduce + (map #(.getHeight %) images))
+        image (blank-image width height)]
+    (doall
+      (map #(insert! %1 image %2 %3)
+           images
+           (x-offsets images)
+           (y-offsets images)))
+    image))
