@@ -4,7 +4,7 @@
             [hiccup.core :refer [html]]
             [hiccup.page :refer [html5 include-css]]
             [hiccup.form :refer [drop-down with-group submit-button form-to hidden-field]]
-            [hiccup.element :refer [link-to]]
+            [hiccup.element :refer [link-to image]]
             [me.raynes.fs :refer [absolute-path expand-home]]
             [clojure.string :refer [split join]]))
 
@@ -28,6 +28,12 @@
   (str "/pdf/view?key=" (:key pdf)
        "&key-prefix=" (key-category (:key pdf))))
 
+(defn pdf-image-link [pdf]
+  (str "/pdf/image?key=" (:key pdf)))
+
+(defn pdf-thumbnail-link [pdf]
+  (str "/pdf/thumbnail?key=" (:key pdf)))
+
 (defn categorize-link [pdf]
   (let [curr-cat (key-category (:key pdf))]
     (form-to [:post "/pdf/categorize"]
@@ -44,7 +50,9 @@
              [:span {:class "pdf-key"} (:key %)]
              [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]
              [:span {:class "pdf-categorize-link"}
-              (categorize-link %)]])
+              (categorize-link %)]
+             [:span {:class "pdf-image"}
+              (image (pdf-image-link %))]])
          pdfs)))
      
 (defn render-preview [ctx pdfs]
@@ -59,5 +67,7 @@
                 [:span {:class "pdf-preview-key"} (:key %)]
                 [:span {:class "pdf-preview-text"} (clean-text (:text %))])]
               [:span {:class "pdf-categorize-link"}
-               (categorize-link %)]])
+               (categorize-link %)]
+              [:span {:class "pdf-thumbnail"}
+               (image (pdf-thumbnail-link %))]])
          pdfs)))
