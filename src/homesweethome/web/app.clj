@@ -42,14 +42,21 @@
   :available-media-types ["image/jpeg"]
   :handle-ok
   (fn [ctx] (let [key (get-in ctx [:request :params "key"])
-                  pdf (pdf-entity/load-by-key key)
-                  _ (assert (not (nil? pdf)))
-                  file (i-cache/thumbnail pdf)]
-              file)))
+                  pdf (first (pdf-entity/load-by-key key))]
+              (i-cache/thumbnail pdf))))
+
+(defresource image-pdf
+  :allowed-methods [:get]
+  :available-media-types ["image/jpeg"]
+  :handle-ok
+  (fn [ctx] (let [key (get-in ctx [:request :params "key"])
+                  pdf (first (pdf-entity/load-by-key key))]
+              (i-cache/image pdf))))
 
 (defroutes app
   (ANY "/pdf/view" [] (wrap-params view-pdf))
   (ANY "/pdf/browse" [] (wrap-params browse-pdf))
   (ANY "/pdf/categorize" [] (wrap-params categorize-pdf))
   (ANY "/pdf/thumbnail" [] (wrap-params thumbnail-pdf))
+  (ANY "/pdf/image" [] (wrap-params image-pdf))
   (resources "/"))
