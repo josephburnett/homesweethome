@@ -65,9 +65,9 @@
               (link-to
                 (pdf-link %)
                 [:span {:class "pdf-preview-key"} (:key %)]
-                [:span {:class "pdf-preview-text"} (clean-text (:text %))])]
+                [:span {:class "pdf-preview-text"} (clean-text (:text %))]
+                [:span {:class "pdf-thumbnail"}
+                 (image (pdf-thumbnail-link %))])]
               [:span {:class "pdf-categorize-link"}
-               (categorize-link %)]
-              [:span {:class "pdf-thumbnail"}
-               (image (pdf-thumbnail-link %))]])
+               (categorize-link %)]])
          pdfs)))
