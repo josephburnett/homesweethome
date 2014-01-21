@@ -27,8 +27,9 @@
 (defn menu [ctx]
   (let [default-category (get-in ctx [:request :params "key-prefix"])]
     (html
-      (messages ctx)
-      (category-selector default-category))))
+      [:div {:id "pdf-menu"}
+       (messages ctx)
+       (category-selector default-category)])))
 
 (defn pdf-link [pdf]
   (str "/pdf/view?key=" (:key pdf)
@@ -54,7 +55,6 @@
     (map #(html
             [:div {:id (:key %) :class "pdf"}
              [:span {:class "pdf-key"} (:key %)]
-             [:span {:class "pdf-folder"} (expand-home (str pdf-store (:file %)))]
              [:span {:class "pdf-categorize-link"}
               (categorize-link %)]
              [:span {:class "pdf-image"}
@@ -67,13 +67,13 @@
     (menu ctx)
     (map #(html
             [:div {:id (:key %) :class "pdf-preview"}
-             [:span {:class "pdf-view-link"}
+             [:div {:class "pdf-view-link"}
               (link-to
                 (pdf-link %)
                 [:span {:class "pdf-preview-key"} (:key %)]
-                [:span {:class "pdf-preview-text"} (clean-text (:text %))]
                 [:span {:class "pdf-thumbnail"}
                  (image (pdf-thumbnail-link %))])]
-              [:span {:class "pdf-categorize-link"}
-               (categorize-link %)]])
+             [:div {:class "pdf-categorize-link"}
+              (categorize-link %)]
+             [:div {:class "pdf-preview-text"} (clean-text (:text %))]])
          pdfs)))

@@ -1,10 +1,52 @@
 div.pdf { 
-	border: 1px solid;
-	width: 500px;
+	border-top: 4px solid #ccc;
+	width: 600px;
 	padding: 10px;
 }
+.pdf-image img {
+	width: 600px;
+	border: 1px solid #ccc;
+}
+
+.pdf-thumbnail img {
+	border: 1px solid #ccc;
+}
+
+.pdf-view-link {
+	width: 250px;
+	float: left;
+}
+
+.pdf-preview-text {
+	width: 320px;
+	float: right;
+}
+
+.pdf-categorize-link {
+	width: 150px;
+	float: right;
+	text-align: right;
+	padding: 10px;
+}
+
+.pdf-key {
+	font-size: 1.5em;
+}
+
+.pdf-preview-key {
+	font-size: 1.1em;
+}
+
+.pdf-preview {
+	clear: both;
+}
+
 div.pdf-preview { 
-	border: 1px solid; 
-	width: 500px;
+	border-top: 4px solid #ccc;
+	width: 600px;
+	padding: 10px;
+}
+
+#pdf-menu {
 	padding: 10px;
 }
