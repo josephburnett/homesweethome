@@ -19,9 +19,15 @@
     (drop-down "key-prefix" (categories :pdf) default)
     (submit-button "browse")))
 
+(defn messages [ctx]
+  (html [:div {:class "pdf-messages"}
+         (if (contains? ctx :errors)
+           (map #(html [:span {:class "pdf-error-message"} %]) (:errors ctx)))]))
+
 (defn menu [ctx]
   (let [default-category (get-in ctx [:request :params "key-prefix"])]
     (html
+      (messages ctx)
       (category-selector default-category))))
 
 (defn pdf-link [pdf]

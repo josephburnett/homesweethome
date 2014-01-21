@@ -32,10 +32,15 @@
   :handle-created
   (fn [ctx] (let [key (get-in ctx [:request :params "key"])
                   category (get-in ctx [:request :params "key-prefix"])]
-              (pdf-view/render-preview ctx
-                (do
-                  (pdf-entity/categorize key category)
-                  (pdf-entity/load-by-key-prefix (key-category key)))))))
+              (try
+                (pdf-view/render-preview ctx
+                  (do
+                    (pdf-entity/categorize key category)
+                    (pdf-entity/load-by-key-prefix (key-category key))))
+                (catch AssertionError e
+                  ; this should be the page they came from, not render
+                  (pdf-view/render (assoc ctx :errors [(.getMessage e)] )
+                    (pdf-entity/load-by-key key)))))))
 
 (defresource thumbnail-pdf
   :allowed-methods [:get]
