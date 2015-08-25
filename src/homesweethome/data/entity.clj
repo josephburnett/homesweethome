@@ -34,6 +34,11 @@
 (defn key-category [key]
   (string/join "/" (drop-last (string/split key #"\/"))))
 
+(defn key-file [key]
+  (let [split-key (string/split key #"\/")
+        split-category (string/split (key-category key) #"\/")]
+    (string/join "/" (drop (count split-key) key))))
+
 (defn categories [type]
   (let [path (entity-path type)]
     (sort (map #(.substring % 1)

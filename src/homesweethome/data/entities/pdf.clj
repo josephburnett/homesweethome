@@ -1,5 +1,5 @@
 (ns homesweethome.data.entities.pdf
-  (:require [me.raynes.fs :refer [absolute-path split exec expand-home]]
+  (:require [me.raynes.fs :refer [absolute-path split exec expand-home find-files]]
             [homesweethome.data.entity :as entity]
             [homesweethome.data.hsh :refer [write-hsh]]
             [homesweethome.config :refer [entity-path]]
@@ -15,6 +15,7 @@
 ;      (:out pdftext)
 ;      (throw (Exception. (str "Non zero readpdf exit code: " (:exit pdftext)))))))
 
+; intake is an idempotent operation
 (defn intake [filename]
   (if (.endsWith filename ".pdf")
     ; TODO use extension function
@@ -32,6 +33,10 @@
                   :md5 (md5 (as-file filename))
                   :key key
                   :tags []}))))
+
+(defn bulk-intake []
+  (let [files (find-files (entity-path :pdf) #".*\.pdf$")]
+    (map #(intake (.getAbsolutePath %)) files)))
 
 (defn load-by-key [key]
   (entity/search :pdf #(= key (:key %))))
